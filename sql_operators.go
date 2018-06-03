@@ -46,6 +46,20 @@ var sqlOperators = map[string]*Operator{
 			return strconv.FormatBool(l || r), nil
 		},
 	},
+	"OR": {
+		Precedence: 1,
+		Eval: func(symbolTable interface{}, left string, right string) (string, error) {
+			l, err := strconv.ParseBool(left)
+			if err != nil {
+				return "false", err
+			}
+			r, err := strconv.ParseBool(right)
+			if err != nil {
+				return "false", err
+			}
+			return strconv.FormatBool(l || r), nil
+		},
+	},
 	"&&": {
 		Precedence: 3,
 		Eval: func(symbolTable interface{}, left string, right string) (string, error) {
@@ -60,7 +74,21 @@ var sqlOperators = map[string]*Operator{
 			return strconv.FormatBool(l && r), nil
 		},
 	},
-	"is": {
+	"AND": {
+		Precedence: 3,
+		Eval: func(symbolTable interface{}, left string, right string) (string, error) {
+			l, err := strconv.ParseBool(left)
+			if err != nil {
+				return "false", err
+			}
+			r, err := strconv.ParseBool(right)
+			if err != nil {
+				return "false", err
+			}
+			return strconv.FormatBool(l && r), nil
+		},
+	},
+	"IS": {
 		Precedence: 5,
 		Eval: func(symbolTable interface{}, left string, right string) (string, error) {
 			// only support "null" and "defined" here
@@ -85,7 +113,7 @@ var sqlOperators = map[string]*Operator{
 			return "true", nil
 		},
 	},
-	"isnot": {
+	"ISNOT": {
 		Precedence: 5,
 		Eval: func(symbolTable interface{}, left string, right string) (string, error) {
 			// only support "null" and "defined" here
